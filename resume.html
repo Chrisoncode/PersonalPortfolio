@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chris Akweyu — Curriculum Vitae</title>
+  <meta name="description" content="Full CV for Chris Akweyu — cybersecurity and IT professional based in Nairobi, Kenya. Experience, education, certifications, and referees." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .cv-page { max-width: 860px; margin: 0 auto; }
+    .cv-header { display: flex; gap: 32px; align-items: flex-start; padding-bottom: 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; flex-wrap: wrap; }
+    .cv-header .cv-photo { width: 120px; height: 120px; flex: none; }
+    .cv-header-text h1 { font-size: clamp(28px, 4vw, 38px); letter-spacing: -0.03em; margin-bottom: 8px; }
+    .cv-header-text .cv-role { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
+    .cv-header-text p { color: var(--text-soft); font-size: 15px; max-width: 620px; }
+    .cv-section { margin-bottom: 44px; }
+    .cv-section h2 { font-size: 13px; font-family: 'JetBrains Mono', monospace; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .cv-entry { margin-bottom: 22px; }
+    .cv-entry-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-bottom: 4px; }
+    .cv-entry-head h3 { font-size: 16.5px; }
+    .cv-entry-head .cv-when { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+    .cv-entry .cv-org { font-size: 13.5px; color: var(--text-mute); margin-bottom: 10px; }
+    .cv-entry ul { padding-left: 0; }
+    .cv-entry ul li { position: relative; padding-left: 18px; font-size: 14.5px; color: var(--text-soft); line-height: 1.6; margin-bottom: 6px; }
+    .cv-entry ul li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: .55; }
+    .cv-referee-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .cv-referee { padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); }
+    .cv-referee h4 { font-size: 14.5px; margin-bottom: 4px; }
+    .cv-referee p { font-size: 13px; color: var(--text-mute); line-height: 1.5; }
+    .cv-referee a { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; }
+    .cv-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 32px; }
+    @media print {
+      header, footer, .cv-actions, .theme-toggle, .nav-links { display: none !important; }
+      body { background: white; color: black; }
+      section { padding: 0 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="brand-mark mono">CA</span><span>Chris Akweyu<small>Security · Forensics</small></span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="index.html#about">About</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#labs">Labs</a>
+      <a href="resume.html">Full CV</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section style="padding-top:64px;">
+    <div class="wrap cv-page">
+
+      <div class="cv-actions">
+        <a href="index.html" class="btn btn-ghost">← Back to home</a>
+        <button onclick="window.print()" class="btn btn-primary">Print / Save as PDF</button>
+      </div>
+
+      <div class="cv-header">
+        <div class="photo-frame cv-photo">
+          <img src="assets/photo.jpg" alt="Chris Akweyu" class="photo-img" onerror="this.style.display='none'">
+          <div class="photo-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <strong>Add photo</strong>
+          </div>
+        </div>
+        <div class="cv-header-text">
+          <h1>Chris Akweyu</h1>
+          <p class="cv-role">Cybersecurity &amp; IT Professional · Nairobi, Kenya</p>
+          <p>Practical experience in enterprise network security, endpoint protection, and infrastructure monitoring across a live IT environment. Strong interest in enterprise networking and network security with a growing focus on how AI and automation can enhance threat detection and security operations.</p>
+        </div>
+      </div>
+
+      <div class="cv-section">
+        <h2>Work Experience</h2>
+
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <h3>Network Administration &amp; IT Intern</h3>
+            <span class="cv-when">May 2026 – August 2026</span>
+          </div>
+          <p class="cv-org">Hass Petroleum Kenya · Nairobi</p>
+          <ul>
+            <li>Administered Active Directory user accounts, group policies and access permissions across the organization's Windows domain environment.</li>
+            <li>Managed endpoint protection and threat response across company devices.</li>
+            <li>Deployed and configured a centralized MDM/monitoring platform across IT and OT devices; built Telegram bot integrations for real-time alerting and automated daily HTML/PDF status reports.</li>
+            <li>Enabled ManageEngine ServiceDesk Plus (SDP) ticketing workflows to automatically escalate High and Critical-severity vulnerabilities for remediation tracking.</li>
+            <li>Extended the monitoring pipeline with Microsoft Graph API email alerting webhooks, broadening incident visibility across communication channels.</li>
+            <li>Hardened email security by implementing SPF, DKIM, and a phased DMARC rollout across Microsoft 365 to reduce spoofing and phishing risk.</li>
+            <li>Managed IP phone systems, ensuring reliable voice communications across office locations.</li>
+            <li>Administered user credentials and biometric access on door control systems, maintaining physical access security across sites.</li>
+            <li>Administered Snipe-IT asset management system, including Linux server administration and user/asset lifecycle management.</li>
+            <li>Delivered on-site and remote technical support to end users across all company affiliates.</li>
+          </ul>
+        </div>
+
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <h3>Independent Labs &amp; CTF Work</h3>
+            <span class="cv-when">Ongoing</span>
+          </div>
+          <p class="cv-org">Self-directed · Public writeups</p>
+          <ul>
+            <li>Hands-on digital forensics investigations across disk, memory, and network artifacts, documented as reproducible lab reports.</li>
+            <li>Regular CTF challenges focused on forensics, network analysis, and log-based threat hunting.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cv-section">
+        <h2>Education</h2>
+
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <h3>Bachelor of Science in Information Security and Forensics</h3>
+            <span class="cv-when">Ongoing</span>
+          </div>
+          <p class="cv-org">KCA University · Nairobi</p>
+        </div>
+
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <h3>Kenya Certificate of Secondary Education</h3>
+            <span class="cv-when">2022 · Grade C+</span>
+          </div>
+          <p class="cv-org">Upperhill School · Nairobi</p>
+        </div>
+
+        <div class="cv-entry">
+          <div class="cv-entry-head">
+            <h3>Kenya Certificate of Primary Education</h3>
+            <span class="cv-when">2018 · 390 marks</span>
+          </div>
+          <p class="cv-org">Musa Gitau Primary School · Kikuyu</p>
+        </div>
+      </div>
+
+      <div class="cv-section">
+        <h2>Certifications</h2>
+        <div class="cv-entry">
+          <ul>
+            <li>Cisco Certified Network Associate (CCNA)</li>
+            <li>KESAP — Data Analysis with SPSS and STATA</li>
+            <li>AI for Beginners — HP Life</li>
+            <li>Introduction to Cybersecurity Awareness — HP Life</li>
+            <li>Diploma in GDPR &amp; Data Protection — In Progress</li>
+            <li>Introduction to Critical Infrastructure Protection — OPSWAT Academy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cv-section">
+        <h2>Skills</h2>
+        <div class="cv-entry">
+          <ul>
+            <li>Active Directory administration &amp; Windows domain management</li>
+            <li>Monitoring &amp; alerting pipeline deployment (Zabbix, API integrations)</li>
+            <li>Kali Linux and security testing tools proficiency</li>
+            <li>Scripting/automation basics (Python)</li>
+            <li>Networking skills</li>
+            <li>Network scanning and enumeration techniques</li>
+            <li>Digital forensics and evidence analysis</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cv-section">
+        <h2>Referees</h2>
+        <div class="cv-referee-grid">
+          <div class="cv-referee">
+            <h4>Mr. Abulrazaaq Adan</h4>
+            <p>Group ICT Manager<br>Hass Petroleum Group, Nairobi</p>
+            <a href="tel:+254710537294">0710 537 294</a>
+          </div>
+          <div class="cv-referee">
+            <h4>Mr. Micah Kimanzi</h4>
+            <p>Network Administrator<br>Hass Petroleum Group, Nairobi</p>
+            <a href="tel:+254701234629">0701 234 629</a>
+          </div>
+          <div class="cv-referee">
+            <h4>Mr. Samuel Muthee</h4>
+            <p>Lecturer<br>KCA University</p>
+            <a href="tel:+254722999273">0722 999 273</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <p>© <span id="year"></span> Chris Akweyu</p>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#labs">Labs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

@@ -86,11 +86,11 @@
       <!-- HERO PHOTO PLACEHOLDER -->
       <div class="photo-frame reveal" data-photo="hero">
         <img src="assets/photo.jpg" alt="Portrait of Chris Akweyu" class="photo-img" onerror="this.style.display='none'">
-        <div class="photo-empty">
+        <!--<div class="photo-empty">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
           <strong>Add photo</strong>
           <span>assets/photo.jpg</span>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
@@ -119,7 +119,7 @@
         <!-- ABOUT PHOTO PLACEHOLDER -->
         <div class="about-side">
           <div class="photo-frame photo-frame--about reveal" data-photo="about">
-            <img src="assets/photo.jpg" alt="Chris Akweyu at work" class="photo-img" onerror="this.style.display='none'">
+            <img src="assets/photo1.jpg" alt="Chris Akweyu at work" class="photo-img" onerror="this.style.display='none'">
             <div class="photo-empty">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
               <strong>Add photo</strong>
@@ -363,53 +363,77 @@
 
       <div class="labs-grid">
         <article class="lab-card reveal">
-          <div class="lab-thumb" aria-hidden="true">
-            <img src="assets/labs/kerberoasting.png" alt="" onerror="this.style.display='none'">
-            <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
-          </div>
-          <div class="lab-body">
-            <div class="lab-meta mono">
-              <span class="plat">TryHackMe</span><span class="sep">·</span><span>Forensics / AD</span>
-            </div>
-            <h3>Kerberoasting Hunt in a Lab AD Environment</h3>
-            <p>Tracing a Kerberoasting attempt from first touch to domain admin path by correlating Windows event logs with network captures.</p>
-            <div class="lab-fields">
-              <div><span class="lab-label mono">Problem</span><p>Identify whether a service account was compromised via Kerberoasting and reconstruct the attack path.</p></div>
-              <div><span class="lab-label mono">Approach</span><p>Enabled 4769 logging, filtered for RC4 ticket requests, correlated with 4624/4672 events on the DC.</p></div>
-              <div><span class="lab-label mono">Tools</span>
-                <div class="proj-stack"><span class="tag">Wireshark</span><span class="tag">Event Viewer</span><span class="tag">Impacket</span></div>
-              </div>
-            </div>
-            <a href="labs/kerberoasting.html" class="lab-cta">
-              Read full lab report
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
-        </article>
+  <div class="lab-thumb" aria-hidden="true">
+    <img src="assets/labs/android-malware-1.png" alt="" onerror="this.style.display='none'">
+    <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
+  </div>
+  <div class="lab-body">
+    <div class="lab-meta mono">
+      <span class="plat">Wireless &amp; Mobile Forensics</span><span class="sep">·</span><span>Mobile Security</span>
+    </div>
+    <h3>Secure Android Devices from Malicious Apps using AVG</h3>
+    <p>Generated a reverse-connection backdoor APK in an isolated VM, served it over HTTP, and validated AVG's real-time detection on an Android emulator — full attack chain from payload build to remediation.</p>
+    <div class="lab-fields">
+      <div>
+        <span class="lab-label mono">Problem</span>
+        <p>Can a consumer-grade Android antivirus reliably detect and remediate a malicious APK delivered via a realistic sideload vector?</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Approach</span>
+        <p>Built the payload with msfvenom on Parrot Security OS, hosted it over HTTP on port 8000, delivered it to a Pixel 3a AVD, and observed AVG's interception behavior.</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Tools</span>
+        <div class="proj-stack">
+          <span class="tag">Android Studio (AVD)</span>
+          <span class="tag">Parrot Security OS</span>
+          <span class="tag">msfvenom</span>
+          <span class="tag">AVG</span>
+        </div>
+      </div>
+    </div>
+    <a href="labs/android-malware-detection.html" class="lab-cta">
+      Read full lab report
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+       </article>
 
         <article class="lab-card reveal">
-          <div class="lab-thumb" aria-hidden="true">
-            <img src="assets/labs/memory-forensics.png" alt="" onerror="this.style.display='none'">
-            <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
-          </div>
-          <div class="lab-body">
-            <div class="lab-meta mono">
-              <span class="plat">Home Lab</span><span class="sep">·</span><span>Forensics</span>
-            </div>
-            <h3>Windows Memory Forensics Case Study</h3>
-            <p>Full memory analysis walkthrough on a simulated compromise — process injection, persistence, and network artifacts reconstructed into a timeline.</p>
-            <div class="lab-fields">
-              <div><span class="lab-label mono">Problem</span><p>Determine what executed on the host and whether persistence was established, using only a memory image.</p></div>
-              <div><span class="lab-label mono">Approach</span><p>Enumerated processes, checked for injected regions, dumped suspicious modules, extracted network artifacts.</p></div>
-              <div><span class="lab-label mono">Tools</span>
-                <div class="proj-stack"><span class="tag">Volatility 3</span><span class="tag">MemProcFS</span></div>
-              </div>
-            </div>
-            <a href="labs/memory-forensics.html" class="lab-cta">
-              Read full lab report
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <div class="lab-thumb" aria-hidden="true">
+    <img src="assets/labs/htb-nta-1.png" alt="" onerror="this.style.display='none'">
+    <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
+  </div>
+  <div class="lab-body">
+    <div class="lab-meta mono">
+      <span class="plat">HTB Academy</span><span class="sep">·</span><span>Network / NTA</span>
+    </div>
+    <h3>Introduction to Network Traffic Analysis</h3>
+    <p>Full walkthrough of HTB Academy's NTA module — tcpdump switchcraft, capture vs. display filters, Wireshark stream reconstruction, and decrypting RDP session metadata.</p>
+    <div class="lab-fields">
+      <div>
+        <span class="lab-label mono">Problem</span>
+        <p>Build fluency in packet inspection tools and apply the NTA workflow (Ingest → Filter → Analyze → Alert) against live PCAP files.</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Approach</span>
+        <p>Reconstructed conversations via Follow TCP Stream, filtered for anomalies, and identified suspicious port 4444 and a newly created user account.</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Tools</span>
+        <div class="proj-stack">
+          <span class="tag">Wireshark</span>
+          <span class="tag">tcpdump</span>
+          <span class="tag">TShark</span>
+          <span class="tag">xfreerdp</span>
+        </div>
+      </div>
+    </div>
+    <a href="labs/htb-network-traffic-analysis.html" class="lab-cta">
+      Read full lab report
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
         </article>
 
         <article class="lab-card reveal">
@@ -500,11 +524,11 @@
           </a>
         </div>
         <div class="contact-links">
-          <a href="https://www.linkedin.com/in/YOUR-HANDLE" target="_blank" rel="noopener">
+          <a href="www.linkedin.com/in/chris-akweyu" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             LinkedIn
           </a>
-          <a href="https://github.com/YOUR-E" target="_blank" rel="noopener">
+          <a href="https://github.com/Chrisoncode" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
             GitHub
           </a>
