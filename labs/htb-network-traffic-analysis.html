@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HTB Academy — Intro to Network Traffic Analysis · Chris Akweyu</title>
-  <meta name="description" content="Lab report: working through HTB Academy's Intro to Network Traffic Analysis module — tcpdump, TShark, Wireshark, capture filters, stream reconstruction, and RDP decryption." />
+  <title>HTB Academy - Intro to Network Traffic Analysis · Chris Akweyu</title>
+  <meta name="description" content="Lab report: working through HTB Academy's Intro to Network Traffic Analysis module - tcpdump, TShark, Wireshark, capture filters, stream reconstruction, and RDP decryption." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
 
 <header id="site-header">
   <div class="wrap nav">
-    <a href="../index.html" class="brand" aria-label="Chris Akweyu — home">
+    <a href="../index.html" class="brand" aria-label="Chris Akweyu - home">
       <span class="brand-mark mono">CA</span>
       <span>Chris Akweyu<small>Security · Forensics</small></span>
     </a>
@@ -42,13 +42,13 @@
 
       <div class="lab-page-head">
         <span class="eyebrow">Lab Report</span>
-        <h1>HTB Academy — Introduction to Network Traffic Analysis</h1>
+        <h1>HTB Academy - Introduction to Network Traffic Analysis</h1>
         <div class="lab-page-meta mono">
           <span class="plat">Hack The Box Academy</span><span class="sep">·</span><span>Network / Traffic Analysis</span><span class="sep">·</span><span>September 2026</span>
         </div>
         <div class="lab-completion-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          Module complete — 10 cubes earned
+          Module complete - 10 cubes earned
           <a href="https://academy.hackthebox.com/achievement/2433236/81" target="_blank" rel="noopener">View achievement →</a>
         </div>
       </div>
@@ -57,7 +57,7 @@
 
         <div class="lab-block">
           <h2>Problem Statement</h2>
-          <p>Network Traffic Analysis (NTA) is the practice of examining network traffic to characterize common ports and protocols, establish a baseline for an environment, monitor and respond to threats, and ensure the greatest possible insight into an organization's network. The objective of this module was to build foundational fluency with packet inspection tools — <strong>tcpdump</strong>, <strong>TShark</strong>, and <strong>Wireshark</strong> — and to apply a structured analysis workflow against real PCAP files in a lab environment.</p>
+          <p>Network Traffic Analysis (NTA) is the practice of examining network traffic to characterize common ports and protocols, establish a baseline for an environment, monitor and respond to threats, and ensure the greatest possible insight into an organization's network. The objective of this module was to build foundational fluency with packet inspection tools - <strong>tcpdump</strong>, <strong>TShark</strong>, and <strong>Wireshark</strong> - and to apply a structured analysis workflow against real PCAP files in a lab environment.</p>
           <p>The task was not just to answer questions correctly, but to demonstrate the underlying workflow: ingest traffic, reduce noise via filtering, analyze and explore, then detect and alert.</p>
         </div>
 
@@ -69,12 +69,12 @@
         <div class="lab-block">
           <h2>Approach</h2>
           <ol class="lab-steps">
-            <li><strong>Networking fundamentals recap — Layers 1–4.</strong> Consolidated the OSI model (7 layers) and TCP/IP model (4 layers). Distinguished link-layer addressing (MAC, layer 2) from network-layer addressing (IPv4, 32-bit, layer 3), and contrasted connection-oriented TCP with connectionless UDP. Confirmed TCP's three-way handshake sequence: SYN → SYN/ACK → ACK.</li>
-            <li><strong>Application-layer protocols — Layers 5–7.</strong> Mapped default behaviors for FTP (active mode, ports 20/21), SMB (TCP/445), HTTP (TCP/80), and HTTPS (TCP/443, TLS-wrapped application data).</li>
+            <li><strong>Networking fundamentals recap - Layers 1–4.</strong> Consolidated the OSI model (7 layers) and TCP/IP model (4 layers). Distinguished link-layer addressing (MAC, layer 2) from network-layer addressing (IPv4, 32-bit, layer 3), and contrasted connection-oriented TCP with connectionless UDP. Confirmed TCP's three-way handshake sequence: SYN → SYN/ACK → ACK.</li>
+            <li><strong>Application-layer protocols - Layers 5–7.</strong> Mapped default behaviors for FTP (active mode, ports 20/21), SMB (TCP/445), HTTP (TCP/80), and HTTPS (TCP/443, TLS-wrapped application data).</li>
             <li><strong>tcpdump fundamentals.</strong> Practiced core switches: <code>-i</code> (interface), <code>-n</code> (no hostname resolution), <code>-v</code> (verbose), <code>-X</code> (hex + ASCII), <code>-c</code> (packet count), <code>-r</code> (read from file), <code>-w</code> (write to file), <code>-</code> (pipe to another process). Used <code>which tcpdump</code> for installation verification and <code>man</code> for reference.</li>
             <li><strong>Capture vs. display filters.</strong> Distinguished capture filters (applied before capture, via <code>-f</code> in TShark) from display filters (applied after). Combined filters with <code>and</code>, <code>or</code>, <code>not</code>. Practiced host-based filters (<code>host 10.10.20.1</code>) and protocol negation (<code>not icmp</code>).</li>
             <li><strong>Wireshark deep-dive.</strong> Explored pane structure (packet list, packet details, packet bytes), statistics and analyze menu tabs, and stream reconstruction via Follow TCP Stream. Extracted files from HTTP traffic (including a JPG hidden in a capture).</li>
-            <li><strong>Guided analysis workflow.</strong> Applied the full NTA workflow to a suspicious-traffic PCAP: identified a newly created user account (<code>hacker</code>) via reconstructed stream data, counted total packets, and flagged a non-standard service port (4444 — a classic reverse-shell indicator).</li>
+            <li><strong>Guided analysis workflow.</strong> Applied the full NTA workflow to a suspicious-traffic PCAP: identified a newly created user account (<code>hacker</code>) via reconstructed stream data, counted total packets, and flagged a non-standard service port (4444 - a classic reverse-shell indicator).</li>
             <li><strong>Decrypting RDP connections.</strong> Reconstructed an RDP session and identified the initiating account (<code>bucky</code>) from captured handshake artifacts.</li>
           </ol>
         </div>
@@ -95,12 +95,12 @@
         <div class="lab-block">
           <h2>Key Findings</h2>
           <ul class="lab-lessons">
-            <li><strong>Server identification in capture:</strong> From <code>question-1.png</code>, the server was identified as <code>174.143.213.184</code> — distinguished from the client by SYN-first behavior and response timing.</li>
+            <li><strong>Server identification in capture:</strong> From <code>question-1.png</code>, the server was identified as <code>174.143.213.184</code> - distinguished from the client by SYN-first behavior and response timing.</li>
             <li><strong>Port assignment in a full TCP handshake:</strong> In the display-filter exercise, the client used ephemeral port <code>43806</code> to connect to server port <code>80</code>, confirming the standard server-fixed / client-ephemeral convention.</li>
             <li><strong>DNS server identification:</strong> On the lab network segment, the DNS resolver was <code>172.16.146.1</code>, identified from observed DNS query/response pairs in the capture.</li>
-            <li><strong>Suspicious port flagging:</strong> In the guided analysis PCAP, port <code>4444</code> stood out as anomalous — no legitimate service uses it by default, and its presence alongside a newly created <code>hacker</code> account was the primary red flag.</li>
+            <li><strong>Suspicious port flagging:</strong> In the guided analysis PCAP, port <code>4444</code> stood out as anomalous - no legitimate service uses it by default, and its presence alongside a newly created <code>hacker</code> account was the primary red flag.</li>
             <li><strong>RDP account attribution:</strong> Even with encryption, RDP session metadata (cookie negotiation, handshake artifacts) allowed attribution of the session to user <code>bucky</code>.</li>
-            <li><strong>Total scope:</strong> The guided analysis PCAP contained <code>44</code> packets — small enough to review exhaustively, reinforcing that thorough manual analysis beats automated tooling when scope is manageable.</li>
+            <li><strong>Total scope:</strong> The guided analysis PCAP contained <code>44</code> packets - small enough to review exhaustively, reinforcing that thorough manual analysis beats automated tooling when scope is manageable.</li>
           </ul>
         </div>
 
@@ -109,16 +109,16 @@
           <p class="lab-note">Screenshots from the module are included in the full PDF report below. You can also drop additional images into <code>assets/labs/</code> and add more <code>&lt;figure&gt;</code> blocks here.</p>
           <div class="lab-shots">
             <figure class="lab-shot">
-              <img src="../assets/labs/htb-nta-1.png" alt="HTB Academy module completion screen — Intro to Network Traffic Analysis" onerror="this.parentElement.classList.add('is-empty')">
-              <figcaption class="mono">Module completion — 10 cubes earned</figcaption>
+              <img src="../assets/labs/htb-nta-1.png" alt="HTB Academy module completion screen - Intro to Network Traffic Analysis" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">Module completion - 10 cubes earned</figcaption>
             </figure>
             <figure class="lab-shot">
               <img src="../assets/labs/htb-nta-2.png" alt="Wireshark Follow TCP Stream showing the hacker user creation" onerror="this.parentElement.classList.add('is-empty')">
-              <figcaption class="mono">Wireshark Follow TCP Stream — reconstructed user creation</figcaption>
+              <figcaption class="mono">Wireshark Follow TCP Stream - reconstructed user creation</figcaption>
             </figure>
             <figure class="lab-shot">
               <img src="../assets/labs/htb-nta-3.png" alt="Wireshark packet list highlighting port 4444 traffic" onerror="this.parentElement.classList.add('is-empty')">
-              <figcaption class="mono">Guided analysis — port 4444 flagged as anomalous</figcaption>
+              <figcaption class="mono">Guided analysis - port 4444 flagged as anomalous</figcaption>
             </figure>
           </div>
         </div>
@@ -126,13 +126,13 @@
         <div class="lab-block">
           <h2>Key Lessons Learned</h2>
           <ul class="lab-lessons">
-            <li>Manual packet analysis beats automated tooling when scope is small — 44 packets reviewed by hand taught more than an IDS alert ever could have.</li>
+            <li>Manual packet analysis beats automated tooling when scope is small - 44 packets reviewed by hand taught more than an IDS alert ever could have.</li>
             <li>Capture filters and display filters serve different phases of analysis. Choosing the right one at the right time is the difference between a clean investigation and a wall of noise.</li>
             <li>Layer 2, 3, and 4 addressing each tell a different part of the story. A single packet contains contributions from all three, and the handshake order reveals which side is the server.</li>
-            <li>Follow TCP Stream is one of the highest-leverage features in Wireshark for recon work — it turns raw packets into readable conversation, and that's where human-readable evidence lives.</li>
-            <li>Port 4444 is not a "protocol" flag, it's a habit flag — it shows up in reverse shells because attackers default to it. Knowing common tooling defaults is a real detection advantage.</li>
+            <li>Follow TCP Stream is one of the highest-leverage features in Wireshark for recon work - it turns raw packets into readable conversation, and that's where human-readable evidence lives.</li>
+            <li>Port 4444 is not a "protocol" flag, it's a habit flag - it shows up in reverse shells because attackers default to it. Knowing common tooling defaults is a real detection advantage.</li>
             <li>Even encrypted protocols leak useful metadata: RDP session negotiation was enough to attribute the session to a specific user without decrypting the payload.</li>
-            <li>Working knowledge of tcpdump and TShark matters even when Wireshark exists — headless and remote environments demand CLI fluency.</li>
+            <li>Working knowledge of tcpdump and TShark matters even when Wireshark exists - headless and remote environments demand CLI fluency.</li>
           </ul>
         </div>
 
