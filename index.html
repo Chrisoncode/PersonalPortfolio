@@ -262,7 +262,7 @@
                 <h4>BSc Information Security and Forensics</h4>
                 <p class="mono">KCA University · Nairobi</p>
               </div>
-              <span class="status-chip">Ongoing</span>
+              <span class="status-chip">Awaiting Graduation</span>
             </div>
             <div class="edu-item">
               <div>
@@ -437,28 +437,40 @@
         </article>
 
         <article class="lab-card reveal">
-          <div class="lab-thumb" aria-hidden="true">
-            <img src="assets/labs/ot-baseline.png" alt="" onerror="this.style.display='none'">
-            <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
-          </div>
-          <div class="lab-body">
-            <div class="lab-meta mono">
-              <span class="plat">Personal Lab</span><span class="sep">·</span><span>Network / OT</span>
-            </div>
-            <h3>OT Network Traffic Baseline &amp; Anomaly Hunt</h3>
-            <p>Captured and baselined Modbus/OPC traffic in a lab OT segment, then wrote detection logic for protocol deviations.</p>
-            <div class="lab-fields">
-              <div><span class="lab-label mono">Problem</span><p>Build a defensible baseline for a small OT segment and define alertable deviations from it.</p></div>
-              <div><span class="lab-label mono">Approach</span><p>Captured 48h of traffic, profiled function codes and polling intervals, wrote Zeek scripts for deviations.</p></div>
-              <div><span class="lab-label mono">Tools</span>
-                <div class="proj-stack"><span class="tag">Zeek</span><span class="tag">Wireshark</span><span class="tag">Modbus</span></div>
-              </div>
-            </div>
-            <a href="labs/ot-baseline.html" class="lab-cta">
-              Read full lab report
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-          </div>
+  <div class="lab-thumb" aria-hidden="true">
+    <img src="assets/labs/kioptrix4-1.png" alt="" onerror="this.style.display='none'">
+    <span class="lab-thumb-empty mono">&lt; screenshot &gt;</span>
+  </div>
+  <div class="lab-body">
+    <div class="lab-meta mono">
+      <span class="plat">VulnHub / Kioptrix</span><span class="sep">·</span><span>Penetration Testing</span>
+    </div>
+    <h3>Kioptrix 4 — Root Access via SQL Injection &amp; MySQL UDF</h3>
+    <p>Full boot-to-root chain: SMB user enumeration, SQL injection in the LigGoat login form, lshell escape, and privilege escalation via a root-owned MySQL service.</p>
+    <div class="lab-fields">
+      <div>
+        <span class="lab-label mono">Problem</span>
+        <p>Chain multiple independent weaknesses in Kioptrix 4 into a single path from unauthenticated network access to root shell.</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Approach</span>
+        <p>netdiscover → nmap → enum4linux → SQLi credential theft → SSH (lshell escape) → MySQL sys_exec UDF → sudo su → root flag.</p>
+      </div>
+      <div>
+        <span class="lab-label mono">Tools</span>
+        <div class="proj-stack">
+          <span class="tag">Kali Linux</span>
+          <span class="tag">nmap</span>
+          <span class="tag">enum4linux</span>
+          <span class="tag">netdiscover</span>
+        </div>
+      </div>
+    </div>
+    <a href="labs/kioptrix4-walkthrough.html" class="lab-cta">
+      Read full lab report
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
         </article>
       </div>
     </div>

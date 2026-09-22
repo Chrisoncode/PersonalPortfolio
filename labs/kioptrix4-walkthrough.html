@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kioptrix 4 Walkthrough — Root Access via SQLi &amp; MySQL UDF · Chris Akweyu</title>
+  <meta name="description" content="Full Kioptrix 4 walkthrough — network discovery, SMB enumeration, SQL injection, restricted shell escape, and privilege escalation to root via MySQL UDF and user management." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+
+<header id="site-header">
+  <div class="wrap nav">
+    <a href="../index.html" class="brand" aria-label="Chris Akweyu — home">
+      <img src="../assets/logo-monogram.png" alt="" class="brand-mark-img" width="34" height="34" />
+      <span>Chris Akweyu<small>Security · Forensics</small></span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="../index.html#about">About</a>
+      <a href="../index.html#projects">Projects</a>
+      <a href="../index.html#labs">Labs</a>
+      <a href="../resume.html">Full CV</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section style="padding-top:56px;">
+    <div class="wrap lab-page">
+      <a href="../index.html#labs" class="lab-back mono">← All lab challenges</a>
+
+      <div class="lab-page-head">
+        <span class="eyebrow">Lab Report</span>
+        <h1>Kioptrix 4 — Root Access via SQL Injection &amp; MySQL UDF</h1>
+        <div class="lab-page-meta mono">
+          <span class="plat">VulnHub / Kioptrix</span><span class="sep">·</span><span>Penetration Testing</span><span class="sep">·</span><span>CAT 1</span>
+        </div>
+        <div class="lab-completion-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Full system compromise achieved — root flag captured
+        </div>
+      </div>
+
+      <div class="lab-page-body">
+
+        <div class="lab-block">
+          <h2>Problem Statement</h2>
+          <p>The target was the <strong>Kioptrix 4</strong> boot-to-root virtual machine — a deliberately vulnerable Linux host designed to test the full penetration testing lifecycle. The objective: gain initial access, escalate privileges, and capture the root flag by chaining together multiple weaknesses rather than exploiting any single vulnerability.</p>
+          <p>Kioptrix 4 is notable because the intended path requires connecting several independent issues — a web application flaw, an over-permissive shell configuration, and a misconfigured database service — into a single coherent attack chain.</p>
+        </div>
+
+        <div class="lab-block">
+          <h2>Environment &amp; Setup</h2>
+          <ul class="lab-lessons">
+            <li><strong>Attacker:</strong> Kali Linux 2024.1 running in Oracle VirtualBox</li>
+            <li><strong>Target:</strong> Kioptrix 4 VM, network address <code>10.0.2.4</code></li>
+            <li><strong>Network:</strong> Isolated VirtualBox NAT network — <code>10.0.2.0/24</code></li>
+            <li><strong>Objective:</strong> Obtain a root shell and read the flag file</li>
+          </ul>
+        </div>
+
+        <div class="lab-block">
+          <h2>Approach</h2>
+          <ol class="lab-steps">
+            <li><strong>Network discovery.</strong> Used <code>netdiscover</code> to enumerate live hosts on the subnet. Two hosts responded — the Kali host and a second system at <code>10.0.2.4</code>, both showing identical MAC vendor strings (PCS Systemtechnik GmbH, the VirtualBox OUI). The second host was identified as the target.</li>
+            <li><strong>Port and service scan.</strong> Ran <code>nmap -sV -sC -p- 10.0.2.4</code> to enumerate every open port with service and default-script detection. Four services exposed:
+              <ul>
+                <li><code>22/tcp</code> — OpenSSH 4.7p1 (Debian)</li>
+                <li><code>80/tcp</code> — Apache httpd 2.2.8</li>
+                <li><code>139/tcp</code> — Samba smbd 3.X</li>
+                <li><code>445/tcp</code> — Samba smbd 3.0.28a (workgroup: WORKGROUP, NetBIOS: KIOPTRIX4)</li>
+              </ul>
+              The Nmap script output also exposed the SMB OS details: <code>Linux kernel 2.6.x</code>, hostname <code>Kioptrix4</code>, domain <code>localdomain</code>.
+            </li>
+            <li><strong>Web application enumeration.</strong> Browsing to <code>http://10.0.2.4</code> revealed a LigGoat Secure Login application titled <em>"Member Login"</em>. The page presents a username/password form with a goat cartoon footer — a clear custom-built PHP app, which is a promising target for injection attacks.</li>
+            <li><strong>SMB user enumeration.</strong> Ran <code>enum4linux -a 10.0.2.4</code> to query the Samba service. The tool enumerated local users directly from the SAM-equivalent database:
+              <ul>
+                <li><code>john</code> (RID 0x3e8)</li>
+                <li><code>robert</code> (RID 0x3eb)</li>
+                <li><code>root</code> (RID 0x3e9)</li>
+                <li><code>loneferret</code> (RID 0xbb8) — note the deliberate reference to the machine's author</li>
+              </ul>
+              It also listed the shares: <code>print$</code> (Disk), <code>IPC$</code> (IPC Service).
+            </li>
+            <li><strong>SQL injection on the login form.</strong> With valid usernames in hand, the login form was tested for injection. The <code>username</code> parameter at <code>/member.php?username=</code> was vulnerable to SQL injection — submitting a crafted payload bypassed authentication and returned the credentials for <code>john</code> in plaintext:
+              <pre class="code-block">john : MyNameIsJohn</pre>
+              The injection exposed both username and password fields directly, indicating the underlying query selected those columns and rendered them back without sanitization.
+            </li>
+            <li><strong>SSH access.</strong> The discovered credentials worked over SSH. Initial connection required an additional flag because modern Kali's default cipher set no longer includes the legacy algorithms the Kioptrix 4 host negotiates:
+              <pre class="code-block">ssh -oHostKeyAlgorithms=+ssh-rsa,ssh-dss john@10.0.2.4</pre>
+              Login succeeded — but the session was dropped into <strong>lshell</strong>, a restricted shell that limits the allowed commands. The banner read: <em>"Welcome to LigGoat Security Systems — We are Watching. LigGoat Shell is in place so you don't screw up."</em>
+            </li>
+            <li><strong>Restricted shell escape.</strong> lshell is a command-whitelist wrapper — but it runs in a context where the underlying language runtime is accessible. The escape:
+              <pre class="code-block">john:~$ echo os.system('/bin/bash')
+john@Kioptrix4:~$ whoami
+john
+john@Kioptrix4:~$ id
+uid=1001(john) gid=1001(john) groups=1001(john)</pre>
+              This dropped a full Bash session — the shell restriction was purely cosmetic.
+            </li>
+            <li><strong>Privilege escalation via MySQL UDF.</strong> Once in a Bash shell as <code>john</code>, the local MySQL service was reachable without credentials:
+              <pre class="code-block">john@Kioptrix4:~$ mysql -u root
+Welcome to the MySQL monitor...</pre>
+              MySQL was running as the <code>root</code> system user — a classic misconfiguration. This allowed arbitrary commands to be executed via the built-in <code>sys_exec()</code> function (loaded via lib_mysqludf_sys):
+              <pre class="code-block">mysql> SELECT sys_exec('usermod -aG admin john');
+mysql> exit</pre>
+              John was now a member of the <code>admin</code> group — which on this host translates to sudo privileges.
+            </li>
+            <li><strong>Root shell.</strong> With elevated group membership, <code>sudo su</code> escalated to root without a password prompt:
+              <pre class="code-block">john@Kioptrix4:~$ sudo su
+[root@Kioptrix4 john]# whoami
+root</pre>
+            </li>
+            <li><strong>Flag capture.</strong> The root flag was found in <code>/root/congrats.txt</code>:
+              <pre class="code-block">[root@Kioptrix4 john]# cat /root/congrats.txt
+Congratulations!
+You've got root.
+
+There is more than one way to get root on this system. Try and find them.
+...</pre>
+            </li>
+          </ol>
+        </div>
+
+        <div class="lab-block">
+          <h2>Tools Used</h2>
+          <div class="proj-stack">
+            <span class="tag">Kali Linux</span>
+            <span class="tag">netdiscover</span>
+            <span class="tag">nmap</span>
+            <span class="tag">enum4linux</span>
+            <span class="tag">ssh</span>
+            <span class="tag">MySQL client</span>
+            <span class="tag">Web browser</span>
+          </div>
+        </div>
+
+        <div class="lab-block">
+          <h2>Attack Chain Summary</h2>
+          <div class="chain">
+            <div class="chain-step">
+              <span class="chain-num mono">01</span>
+              <div>
+                <strong>Reconnaissance</strong>
+                <p>netdiscover + nmap identified ports 22, 80, 139, 445 on <code>10.0.2.4</code></p>
+              </div>
+            </div>
+            <div class="chain-step">
+              <span class="chain-num mono">02</span>
+              <div>
+                <strong>Enumeration</strong>
+                <p>enum4linux extracted valid users (john, robert, root, loneferret) and share names</p>
+              </div>
+            </div>
+            <div class="chain-step">
+              <span class="chain-num mono">03</span>
+              <div>
+                <strong>Initial Access</strong>
+                <p>SQL injection in the LigGoat login form exposed plaintext credentials — <code>john:MyNameIsJohn</code></p>
+              </div>
+            </div>
+            <div class="chain-step">
+              <span class="chain-num mono">04</span>
+              <div>
+                <strong>Shell Escape</strong>
+                <p>SSH landed in lshell; escaped via Python one-liner: <code>echo os.system('/bin/bash')</code></p>
+              </div>
+            </div>
+            <div class="chain-step">
+              <span class="chain-num mono">05</span>
+              <div>
+                <strong>Privilege Escalation</strong>
+                <p>Passwordless MySQL (running as root) + <code>sys_exec()</code> UDF → added john to the admin group</p>
+              </div>
+            </div>
+            <div class="chain-step">
+              <span class="chain-num mono">06</span>
+              <div>
+                <strong>Full Compromise</strong>
+                <p><code>sudo su</code> granted root; flag read from <code>/root/congrats.txt</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lab-block">
+          <h2>Screenshots</h2>
+          <p class="lab-note">Screenshots from the walkthrough are included in the full PDF report below. You can also drop additional images into <code>assets/labs/</code> and add more <code>&lt;figure&gt;</code> blocks here.</p>
+          <div class="lab-shots">
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-1.png" alt="netdiscover identifying target 10.0.2.4 on the network" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">netdiscover — target identified at 10.0.2.4</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-2.png" alt="nmap service and version scan results for Kioptrix 4" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">nmap -sV -sC — open ports 22, 80, 139, 445</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-3.png" alt="LigGoat member login page on port 80" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">LigGoat Member Login — the vulnerable web application</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-4.png" alt="enum4linux output listing local users" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">enum4linux — users john, robert, root, loneferret enumerated</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-5.png" alt="SQL injection result showing john's credentials in plaintext" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">SQL injection — plaintext credentials returned</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-6.png" alt="Restricted lshell escape to full Bash session" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">lshell escape — full Bash shell obtained</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-7.png" alt="MySQL sys_exec used to add john to admin group" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">MySQL sys_exec() — john added to admin group</figcaption>
+            </figure>
+            <figure class="lab-shot">
+              <img src="../assets/labs/kioptrix4-8.png" alt="Root flag captured from /root/congrats.txt" onerror="this.parentElement.classList.add('is-empty')">
+              <figcaption class="mono">Root flag captured — full system compromise</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="lab-block">
+          <h2>Key Lessons Learned</h2>
+          <ul class="lab-lessons">
+            <li><strong>Chain thinking beats single-exploit thinking.</strong> No single vulnerability in Kioptrix 4 was catastrophic on its own — SQLi gave credentials, lshell was escapable, and MySQL was misconfigured. The power came from stringing them together. Real-world breaches follow the same pattern.</li>
+            <li><strong>Anonymous SMB enum is a goldmine.</strong> enum4linux pulled the full user list from a service that allowed unauthenticated queries. In production environments, SMB anonymous access and null sessions are still found regularly and are consistently the first foothold.</li>
+            <li><strong>Restricted shells are not security boundaries.</strong> lshell restricts which commands you can run — but if any of those commands can execute a language runtime (Python, Perl, awk), the restriction is bypassable in seconds. If an interpreter is whitelisted, the shell is effectively unrestricted.</li>
+            <li><strong>Database services should never run as root.</strong> The MySQL daemon was running as the <code>root</code> system user, which is what allowed <code>sys_exec()</code> to run privileged commands. Following the principle of least privilege for service accounts would have blocked this entire escalation path.</li>
+            <li><strong>Password reuse and plaintext creds compound impact.</strong> The same <code>john:MyNameIsJohn</code> combination was valid on the web app and over SSH. Leaking it from the SQL injection turned into remote code execution in minutes.</li>
+            <li><strong>Legacy cipher support is an operational risk.</strong> Modern Kali ships without legacy SSH algorithms, so <code>-oHostKeyAlgorithms=+ssh-rsa,ssh-dss</code> was needed to connect. In a real engagement, this same fact means old systems become invisible to standard tooling unless you know to widen your cipher list — or, defensively, that legacy algorithms should be disabled on modern hosts.</li>
+          </ul>
+        </div>
+
+        <div class="lab-block">
+          <h2>Full Report (PDF)</h2>
+          <div class="pdf-viewer">
+            <object data="../assets/labs/kioptrix4-walkthrough.pdf" type="application/pdf" width="100%" height="780">
+              <div class="pdf-fallback">
+                <p>Your browser can't display the PDF inline.</p>
+                <a href="../assets/labs/kioptrix4-walkthrough.pdf" class="btn btn-primary" target="_blank" rel="noopener">Open PDF in new tab</a>
+              </div>
+            </object>
+          </div>
+          <div class="pdf-actions">
+            <a href="../assets/labs/kioptrix4-walkthrough.pdf" class="btn btn-primary" download>
+              Download PDF
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M6 11l6 6 6-6M5 21h14"/></svg>
+            </a>
+            <a href="../assets/labs/kioptrix4-walkthrough.pdf" class="btn btn-ghost" target="_blank" rel="noopener">Open in new tab</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <p>© <span id="year"></span> Chris Akweyu</p>
+    <div class="foot-links">
+      <a href="../index.html">Home</a>
+      <a href="../index.html#labs">Labs</a>
+      <a href="../resume.html">CV</a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="../main.js"></script>
+</body>
+</html>
